@@ -1,63 +1,117 @@
-# JCIN UNIBEN TOYP Dashboard Backend
+# JCIN UNIBEN TOYP Dashboard
 
-This simple Node.js (ES module) service provides API endpoints for the TOYP UNIBEN website. It uses Supabase as the database/backend and exposes a minimal Express-powered REST API for nominations, votes, categories, counts, and more.
+A lightweight serverless admin dashboard system for managing TOYP UNIBEN nominations, voting, categories, and audit logs.
 
-## Prerequisites
+This project uses:
 
-- Node.js 18 or later (includes npm).
-- A Supabase project with the tables defined in `schema.sql`.
+Vercel Serverless Functions for API endpoints
+Supabase as the backend database
+A static frontend dashboard for admin interaction
+📁 Project Structure
+/api
+  categories/
+  nominations/
+  counts.js
+  health.js
+  logs.js
+  votes.js
+  _supabase.js
 
-## Setup
+/static
+  scripts.js
+  views/
+  index.html
 
-1. Copy `.env.example` to `.env` and fill in the values from your Supabase project. Rotate any keys if they were committed previously.
-2. Install dependencies:
-
-```bash
-cd jcinunibentoypdashboard
+schema.sql
+vercel.json
+⚙️ Prerequisites
+Node.js 18+
+A Supabase project with tables defined in schema.sql
+Vercel CLI (for local development)
+🚀 Setup
+1. Install dependencies
 npm install
-```
+2. Configure environment variables
 
-3. You can run the server in production mode:
+Copy .env.example to .env:
 
-```bash
-npm start
-```
+cp .env.example .env
 
-or during development with automatic restarts:
+Fill in your Supabase credentials:
 
-```bash
-npm run dev
-```
+SUPABASE_URL=...
+SUPABASE_ANON_KEY=...
+3. Run locally (IMPORTANT)
 
-The app listens on port `3000` by default (override with `PORT` env).
+This project runs as a Vercel serverless app, not a traditional Node server.
 
-## Available endpoints
+Start development server:
 
-- `GET /api/health` – quick health check, returns `{ status: 'ok' }`.
-- `POST /api/nominations` – insert a new nomination.
-- `GET /api/nominations` – list recent nominations.
-- `GET /api/counts` – return total counts for overview.
-- `POST /api/votes` – record a vote.
-- `GET /api/categories` – list category records.
+vercel dev
+🌐 Running the App
 
-> **Note:** the database schema is managed on the Supabase project. You can run SQL commands via the dashboard's SQL editor or using the Supabase CLI.
+After starting vercel dev, open:
 
-## Using the API from the frontend
+http://localhost:3000
+🔌 API Endpoints
 
-In `JCIN-UNIBEN-TOYP25/scripts/nomination.js` the form now posts to `/api/nominations`. When the backend is running locally, serve the static files from a server or use `npm install -g serve` and run `serve .` inside the static site folder. The backend must be reachable at the same origin or configure CORS accordingly.
+All endpoints are serverless functions under /api.
 
-## Security & best practices
+System
+GET /api/health → Health check
+Nominations
+POST /api/nominations → Create nomination
+GET /api/nominations → Fetch nominations
+Votes
+POST /api/votes → Submit vote
+Categories
+GET /api/categories → List categories
+Analytics
+GET /api/counts → Dashboard summary counts
+Logs
+GET /api/logs → System activity logs
+🖥 Frontend
 
-- Never expose the service role key in client-side code.
-- Store secrets in environment variables and keep `.env` out of version control.
-- `.gitignore` already excludes `.env` and `databaseCredentials.json`.
-- Rotate keys if you lose access to the Supabase dashboard.
+The frontend is a static admin dashboard located in /static.
 
-## Development notes
+Key features:
 
-- The codebase uses ES module syntax; `package.json` contains `"type": "module"`.
-- Use `npm run dev` (requires `nodemon`) to restart automatically on changes.
+Nomination review workflow
+Category management
+Voting controls
+Audit logs viewer
+Role-based UI (admin/auditor modes)
 
----
+Frontend communicates with /api/* endpoints.
 
-This repo can be deployed anywhere Node.js is supported (Vercel, Heroku, DigitalOcean, etc.) using the same `.env` values.
+🔐 Security Notes
+Supabase keys must never be exposed in frontend code
+Row Level Security (RLS) should be enabled in Supabase
+Environment variables must be kept in .env
+Serverless functions handle secure DB access via _supabase.js
+🧠 Architecture Overview
+Frontend (static JS dashboard)
+        ↓
+Vercel Serverless API (/api)
+        ↓
+Supabase Database
+🧪 Development Notes
+Uses ES Modules ("type": "module")
+Each /api/*.js file is an independent serverless function
+No Express server is required
+Local development requires vercel dev
+🚀 Deployment
+
+This project is designed for:
+
+Vercel (recommended)
+Any platform supporting serverless functions
+
+Deploy with:
+
+vercel
+⚠️ Important Clarification
+
+This project is not a traditional Express backend.
+
+It uses serverless functions instead of a persistent server.
